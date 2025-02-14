@@ -16,7 +16,10 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             desciption: {
-                type: Sequelize.STRING
+                type: Sequelize.TEXT
+            },
+            files: {
+                type: Sequelize.TEXT
             },
             createdAt: {
                 allowNull: false,
