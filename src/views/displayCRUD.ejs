@@ -49,7 +49,7 @@ button.btn-delete {
                 <td><%= users[i].phonenumber %></td>
                 <td>
                   <a href="/edit-crud?id=<%=users[i].id%>" class="btn-edit" type="button">Edit</a>
-                  <button class="btn-delete" type="button">Delete</button>
+                  <a href="/delete-crud?id=<%=users[i].id%>" class="btn-delete" type="button">Delete</a>
                 </td>
               </tr>
               <% } %>
