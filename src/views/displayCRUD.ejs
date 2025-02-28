@@ -40,19 +40,19 @@ button.btn-delete {
             </thead>
             <tbody>
                 <% for(var i=0; i < users.length; i++) { %>
-              <tr>
-                <th scope="row"><%= i %></th>
-                <td><%= users[i].email %></td>
-                <td><%= users[i].firstName %></td>
-                <td><%= users[i].lastName %></td>
-                <td><%= users[i].address %></td>
-                <td><%= users[i].phonenumber %></td>
-                <td>
-                  <a href="/edit-crud?id=<%=users[i].id%>" class="btn-edit" type="button">Edit</a>
-                  <a href="/delete-crud?id=<%=users[i].id%>" class="btn-delete" type="button">Delete</a>
-                </td>
-              </tr>
-              <% } %>
+                  <tr >
+                    <th scope="row"><%= i %></th>
+                    <td><%= users[i].email %></td>
+                    <td><%= users[i].firstName %></td>
+                    <td><%= users[i].lastName %></td>
+                    <td><%= users[i].address %></td>
+                    <td><%= users[i].phonenumber %></td>
+                    <td>
+                      <a href="/edit-crud?id=<%=users[i].id%>" class="btn-edit" type="button">Edit</a>
+                      <a href="/delete-crud?id=<%=users[i].id%>" class="btn-delete" type="button">Delete</a>
+                    </td>
+                  </tr>
+                <% } %>
             </tbody>
           </table>
     </div>
