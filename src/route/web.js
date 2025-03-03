@@ -23,6 +23,8 @@ let initWebRoutes = (app) => {
 
     router.get('/api/allcode', userController.handleGetAllCode);
     router.get('/api/top-doctor-home', doctorController.handleGetTopDoctor);
+    router.get('/api/get-all-doctors', doctorController.handleGetAllDoctor);
+    router.post('/api/save-infor-doctors', doctorController.handlePostInforDoctor);
     return app.use("/", router);
 }
 module.exports = initWebRoutes;
