@@ -20,11 +20,14 @@ let initWebRoutes = (app) => {
     router.post('/api/create-new-user', userController.handleCreateNewUser);
     router.put('/api/edit-user', userController.handleEditUser);
     router.delete('/api/delete-user', userController.handleDeleteUser);
-
     router.get('/api/allcode', userController.handleGetAllCode);
+
     router.get('/api/top-doctor-home', doctorController.handleGetTopDoctor);
     router.get('/api/get-all-doctors', doctorController.handleGetAllDoctor);
     router.post('/api/save-infor-doctors', doctorController.handlePostInforDoctor);
+    router.get('/api/get-detail-doctor-by-id', doctorController.handleGetDetailDoctorById);
+
+
     return app.use("/", router);
 }
 module.exports = initWebRoutes;
