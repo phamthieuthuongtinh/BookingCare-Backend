@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Booking.init({
-  
+
     statusId: DataTypes.STRING,
     doctorId: DataTypes.INTEGER,
     patientId: DataTypes.INTEGER,
-    date:DataTypes.DATE,
-    timeType:DataTypes.STRING,
-    
+    date: DataTypes.STRING,
+    timeType: DataTypes.STRING,
+
   }, {
     sequelize,
     modelName: 'Booking',
