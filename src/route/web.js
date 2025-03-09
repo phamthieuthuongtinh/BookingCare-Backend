@@ -32,7 +32,7 @@ let initWebRoutes = (app) => {
     router.get('/api/get-extra-infor-doctor-by-id', doctorController.handleGetExtraInforDoctorById);
     router.get('/api/get-profile-doctor-by-id', doctorController.handleGetProfileDoctorById);
     router.post('/api/patient-book-appointment', patientController.postBookAppointment);
-
+    router.post('/api/verify-book-appointment', patientController.postVerifyBookAppointment);
     return app.use("/", router);
 }
 module.exports = initWebRoutes;
