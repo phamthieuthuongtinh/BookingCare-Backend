@@ -7,7 +7,7 @@ import emailService from "./emailService";
 import { v4 as uuidv4 } from 'uuid';
 
 let buildUrlEmail = (doctorId, token) => {
-    let result = `${process.env.URL_REACT}/veify-booking?token=${token}&doctorId=${doctorId}`;
+    let result = `${process.env.URL_REACT}/verify-booking?token=${token}&doctorId=${doctorId}`;
     return result;
 }
 
@@ -96,7 +96,7 @@ let verifyBookAppointment = (data) => {
                     })
                 } else {
                     resolve({
-                        errCode: 0,
+                        errCode: 2,
                         errMessage: "Appointment has been activated or does not exist"
                     })
                 }
