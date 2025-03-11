@@ -50,23 +50,33 @@ let getAllDoctor = () => {
         }
     })
 }
-
+let checkRequiredFields = (inputData) => {
+    let arr = ['doctorId', 'contentHTML', 'contentMarkdown', 'action', 'selectedPrice', 'selectedPayment',
+        'selectedProvince', 'nameClinic', 'addressClinic', 'selectedSpecialty'
+    ]
+    let isValid = true;
+    let element = '';
+    for (let i = 0; i < arr.length; i++) {
+        if (!inputData[arr[i]]) {
+            isValid = false;
+            element = arr[i];
+            break;
+        }
+    }
+    return {
+        isValid: isValid,
+        element: element
+    }
+}
 let saveDetailInforDoctor = (inputData) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!inputData.doctorId
-                || !inputData.contentHTML
-                || !inputData.contentMarkdown
-                || !inputData.action
-                || !inputData.selectedPrice
-                || !inputData.selectedPayment
-                || !inputData.selectedProvince
-                || !inputData.nameClinic
-                || !inputData.addressClinic
+            let checkObj = checkRequiredFields(inputData);
+            if (checkObj.isValid === false
             ) {
                 resolve({
                     errCode: 1,
-                    errMessage: "Missing parameter infor doctor"
+                    errMessage: `Missing parameter: ${checkObj.element}`
                 })
             } else {
                 //upsert to markdown
@@ -106,6 +116,8 @@ let saveDetailInforDoctor = (inputData) => {
 
                     doctorInfor.addressClinic = inputData.addressClinic;
                     doctorInfor.nameClinic = inputData.nameClinic;
+                    doctorInfor.specialtyId = inputData.selectedSpecialty;
+                    doctorInfor.clinicId = inputData.selectedClinic;
                     doctorInfor.note = inputData.note;
 
                     await doctorInfor.save();
@@ -115,7 +127,8 @@ let saveDetailInforDoctor = (inputData) => {
                         priceId: inputData.selectedPrice,
                         paymentId: inputData.selectedPayment,
                         provinceId: inputData.selectedProvince,
-
+                        specialtyId: inputData.selectedSpecialty,
+                        specialtyId: inputData.selectedClinic,
                         addressClinic: inputData.addressClinic,
                         nameClinic: inputData.nameClinic,
                         note: inputData.note,
