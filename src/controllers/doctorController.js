@@ -96,6 +96,18 @@ let handleGetProfileDoctorById = async (req, res) => {
         })
     }
 }
+let getListPatientForDoctor = async (req, res) => {
+    try {
+        let infor = await doctorService.getListPatientForDoctor(req.query.doctorId, req.query.date);
+        return res.status(200).json(infor);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: "errror from server"
+        })
+    }
+}
 module.exports = {
     handleGetTopDoctor: handleGetTopDoctor,
     handleGetAllDoctor: handleGetAllDoctor,
@@ -104,6 +116,6 @@ module.exports = {
     handleBulkCreateSchedule: handleBulkCreateSchedule,
     handleGetScheduleDoctorByDate: handleGetScheduleDoctorByDate,
     handleGetExtraInforDoctorById: handleGetExtraInforDoctorById,
-    handleGetProfileDoctorById: handleGetProfileDoctorById
-
+    handleGetProfileDoctorById: handleGetProfileDoctorById,
+    getListPatientForDoctor: getListPatientForDoctor
 }

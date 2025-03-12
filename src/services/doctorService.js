@@ -2,7 +2,7 @@ import { where } from "sequelize";
 import db from "../models/index";
 import { raw } from "body-parser";
 require('dotenv').config();
-import _, { includes, some } from 'lodash';
+import _, { includes, reject, some } from 'lodash';
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctorHome = (limitInput) => {
@@ -394,6 +394,47 @@ let getProfileDoctorById = (inputId) => {
         }
     })
 }
+let getListPatientForDoctor = (doctorId, date) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!doctorId || !date) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing parameter"
+                })
+            }
+            else {
+                let data = await db.Booking.findAll({
+                    where: {
+                        statusId: 'S2',
+                        doctorId: doctorId,
+                        date: date
+                    },
+                    include: [
+                        {
+                            model: db.User,
+                            as: 'patientData',
+                            attributes: ['email', 'firstName', 'gender', 'address'],
+                            include: [
+                                { model: db.Allcode, as: 'genderData', attributes: ['valueVi', 'valueEn'] },
+                                // { model: db.Allcode, as: 'timeData', attributes: ['valueVi', 'valueEn'] }
+                            ]
+                        }
+                    ],
+                    raw: false,
+                    nest: true
+                })
+
+                resolve({
+                    errCode: 0,
+                    data: data
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     getTopDoctorHome: getTopDoctorHome,
     getAllDoctor: getAllDoctor,
@@ -402,5 +443,6 @@ module.exports = {
     bulkCreateSchedule: bulkCreateSchedule,
     getScheduleDoctorByDate: getScheduleDoctorByDate,
     getExtraInforDoctorById: getExtraInforDoctorById,
-    getProfileDoctorById: getProfileDoctorById
+    getProfileDoctorById: getProfileDoctorById,
+    getListPatientForDoctor: getListPatientForDoctor
 }
