@@ -1,3 +1,4 @@
+const { where } = require("sequelize")
 const db = require("../models")
 
 let createSpecialty = (data) => {
@@ -45,7 +46,58 @@ let getAllSpecialty = () => {
         }
     })
 }
+let getDetailSpecialtyById = (specialtyId, location) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!specialtyId || !location) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing parameter"
+                })
+            } else {
+
+                let data = await db.Specialty.findOne({
+                    where: { id: specialtyId },
+                    attributes: ['descriptionHTML', 'descriptionMarkdown']
+
+                })
+                if (data) {
+                    let doctorSpecialty = [];
+                    if (location === "ALL") {
+                        doctorSpecialty = await db.Doctor_Infor.findAll({
+                            where: { specialtyId: specialtyId },
+                            attributes: ['doctorId', 'provinceId'],
+                        })
+                    } else {
+                        doctorSpecialty = await db.Doctor_Infor.findAll({
+                            where: {
+                                specialtyId: specialtyId,
+                                provinceId: location
+                            },
+                            attributes: ['doctorId', 'provinceId'],
+                        })
+                    }
+
+                    data.doctorSpecialty = doctorSpecialty
+                } else {
+                    data = {};
+                }
+                resolve({
+                    data: data,
+                    errCode: 0,
+                    errMessage: "Ok"
+                })
+            }
+
+
+        }
+        catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     createSpecialty: createSpecialty,
-    getAllSpecialty: getAllSpecialty
+    getAllSpecialty: getAllSpecialty,
+    getDetailSpecialtyById: getDetailSpecialtyById
 }
