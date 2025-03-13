@@ -105,12 +105,91 @@ let getBodyHtmlEmail = (dataSend) => {
     }
     return result;
 }
+let getBodyHtmlEmailRedemy = (dataSend) => {
+    let result = '';
+    if (dataSend.language === 'vi') {
+        result =
+            `
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4; padding: 20px;">
+            <tr>
+            <td>
+                <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="background-color: #ffffff; padding: 20px; border-radius: 5px;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <h2 style="color: #333;">Xin chào ${dataSend.patientName}!</h2>
+                                <h3 style="color: #333;">Thông tin đơn thuốc/hóa đơn được gửi trong file đính kèm!</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; padding-top: 20px; border-top: 1px solid #ddd;">
+                            <p style="color: #999; font-size: 12px;">Xin chân thành cảm ơn bạn đã sử dụng dịch vụ.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            </tr>
+            </table>
+        `
+    }
+    if (dataSend.language === 'en') {
+        result =
+            `
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f4f4f4; padding: 20px;">
+            <tr>
+                <td>
+                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="background-color: #ffffff; padding: 20px; border-radius: 5px;">
+                        <tr>
+                            <td style="text-align: center;">
+                                <h2 style="color: #333;">Dear  ${dataSend.patientName}!</h2>
+                                    <h3 style="color: #333;">Information about redemy/bill !</h2>
+                            </td>
+                        <tr>
+                            <td style="text-align: center; padding-top: 20px; border-top: 1px solid #ddd;">
+                                <p style="color: #999; font-size: 12px;">Thank you.</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+       `
+    }
+    return result;
+}
 
+let sendAttachments = async (dataSend) => {
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for port 465, false for other ports
+        auth: {
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD,
+        },
+    });
 
+    // async..await is not allowed in global scope, must use a wrapper
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"TINHPHAM 👻" <tinhphamtinhpham2002.email>', // sender address
+        to: dataSend.email, // list of receivers
+        subject: "Ket qua dat lich kham benh", // Subject line
+        html: getBodyHtmlEmailRedemy(dataSend),
+        attachments: [
+            {   // encoded string as an attachment
+                filename: `ramedy-${dataSend.patientId}-${new Date().getTime()}.png`,
+                content: dataSend.imageBase64.split("base64,")[1],
+                encoding: 'base64'
+            },
+        ],
+    });
+}
 
 
 
 
 module.exports = {
-    sendSimpleEmail: sendSimpleEmail
+    sendSimpleEmail: sendSimpleEmail,
+    sendAttachments: sendAttachments
 }

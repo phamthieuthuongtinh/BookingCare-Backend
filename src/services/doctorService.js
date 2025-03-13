@@ -3,6 +3,7 @@ import db from "../models/index";
 import { raw } from "body-parser";
 require('dotenv').config();
 import _, { includes, reject, some } from 'lodash';
+import emailService from "./emailService";
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctorHome = (limitInput) => {
@@ -419,7 +420,8 @@ let getListPatientForDoctor = (doctorId, date) => {
                                 { model: db.Allcode, as: 'genderData', attributes: ['valueVi', 'valueEn'] },
                                 // { model: db.Allcode, as: 'timeData', attributes: ['valueVi', 'valueEn'] }
                             ]
-                        }
+                        },
+                        { model: db.Allcode, as: 'timeTypeDataPatient', attributes: ['valueVi', 'valueEn'] },
                     ],
                     raw: false,
                     nest: true
@@ -428,6 +430,43 @@ let getListPatientForDoctor = (doctorId, date) => {
                 resolve({
                     errCode: 0,
                     data: data
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+let sendRedemy = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.email || !data.doctorId || !data.patientId || !data.timeType) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing parameter"
+                })
+            }
+            else {
+                //update patient status
+                let appointment = await db.Booking.findOne({
+                    where: {
+                        doctorId: data.doctorId,
+                        patientId: data.patientId,
+                        timeType: data.timeType,
+                        statusId: "S2"
+                    },
+                    raw: false
+
+                })
+                if (appointment) {
+                    appointment.statusId = 'S3'
+                    await appointment.save()
+                }
+                //send email
+                await emailService.sendAttachments(data);
+                resolve({
+                    errCode: 0,
+                    errMessage: "ok"
                 })
             }
         } catch (error) {
@@ -444,5 +483,6 @@ module.exports = {
     getScheduleDoctorByDate: getScheduleDoctorByDate,
     getExtraInforDoctorById: getExtraInforDoctorById,
     getProfileDoctorById: getProfileDoctorById,
-    getListPatientForDoctor: getListPatientForDoctor
+    getListPatientForDoctor: getListPatientForDoctor,
+    sendRedemy: sendRedemy
 }

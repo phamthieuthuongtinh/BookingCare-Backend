@@ -108,6 +108,19 @@ let getListPatientForDoctor = async (req, res) => {
         })
     }
 }
+
+let sendRedemy = async (req, res) => {
+    try {
+        let infor = await doctorService.sendRedemy(req.body);
+        return res.status(200).json(infor);
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            errCode: -1,
+            errMessage: "errror from server"
+        })
+    }
+}
 module.exports = {
     handleGetTopDoctor: handleGetTopDoctor,
     handleGetAllDoctor: handleGetAllDoctor,
@@ -117,5 +130,6 @@ module.exports = {
     handleGetScheduleDoctorByDate: handleGetScheduleDoctorByDate,
     handleGetExtraInforDoctorById: handleGetExtraInforDoctorById,
     handleGetProfileDoctorById: handleGetProfileDoctorById,
-    getListPatientForDoctor: getListPatientForDoctor
+    getListPatientForDoctor: getListPatientForDoctor,
+    sendRedemy: sendRedemy
 }
